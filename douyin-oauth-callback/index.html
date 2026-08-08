@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>抖音授权回调 | Vincent Phosun</title>
+    <meta name="description" content="文森特别6内容管理工具的抖音 OAuth 授权回调页面。">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <meta name="googlebot" content="noindex, nofollow, noarchive">
+    <meta name="referrer" content="no-referrer">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header>
+      <a class="wordmark" href="/">VINCENTPHOSUN.COM</a>
+      <nav>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+      </nav>
+    </header>
+    <main class="legal">
+      <div class="legal-title">
+        <p class="label">DOUYIN OAUTH / 授权回调</p>
+        <h1 id="callback-title">正在确认授权结果</h1>
+        <p class="chinese-title" id="callback-summary">请稍候，页面正在安全处理抖音返回的临时授权状态。</p>
+      </div>
+
+      <section>
+        <h2>当前状态</h2>
+        <p id="callback-status">正在检查回调参数。</p>
+        <p id="state-status">安全校验参数尚未确认。</p>
+      </section>
+
+      <section>
+        <h2>隐私与安全</h2>
+        <p>本页面不会显示完整临时授权码，不会索取或展示 access_token、refresh_token、client_secret，也不会将回调参数写入浏览器存储。</p>
+        <p>为减少暴露，页面会在读取参数是否存在后立即从地址栏移除查询参数。本页面不会把这些参数发送给第三方。</p>
+      </section>
+
+      <section>
+        <h2>下一步</h2>
+        <p>如果页面显示已收到授权响应，可以关闭本页并返回内容管理工具继续操作。</p>
+        <p>本页仅负责接收并确认回调落地。需要 client_secret 的服务端 token 交换不会在浏览器或 GitHub Pages 中执行。</p>
+      </section>
+
+      <section>
+        <h2>运营主体</h2>
+        <p>上海举个李子网络科技有限公司</p>
+        <p><a href="mailto:contact@vincentphosun.com">contact@vincentphosun.com</a></p>
+      </section>
+
+      <noscript>
+        <p class="note">浏览器已禁用 JavaScript，无法确认回调参数。请返回内容管理工具重新发起授权。</p>
+      </noscript>
+    </main>
+    <footer>
+      <div><p>© 2026 Vincent Phosun</p><a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">沪ICP备2021026543号-1</a></div>
+      <a href="mailto:contact@vincentphosun.com">contact@vincentphosun.com</a>
+    </footer>
+
+    <script>
+      (() => {
+        const query = new URLSearchParams(window.location.search);
+        const hasCode = query.has("code");
+        const hasState = query.has("state");
+        const hasError = query.has("error") || query.has("error_code");
+
+        window.history.replaceState(null, document.title, window.location.pathname);
+
+        const title = document.getElementById("callback-title");
+        const summary = document.getElementById("callback-summary");
+        const status = document.getElementById("callback-status");
+        const stateStatus = document.getElementById("state-status");
+
+        if (hasError) {
+          title.textContent = "授权未完成";
+          summary.textContent = "抖音返回了未完成或被取消的授权状态。";
+          status.textContent = "未收到可继续处理的授权结果。请返回内容管理工具后重试。";
+        } else if (hasCode) {
+          title.textContent = "已收到授权响应";
+          summary.textContent = "临时授权结果已安全到达本回调页。";
+          status.textContent = "临时授权码已收到，但不会在页面中显示、保存或交换。";
+        } else {
+          title.textContent = "等待授权响应";
+          summary.textContent = "当前地址没有可识别的抖音授权结果。";
+          status.textContent = "请从内容管理工具重新发起抖音授权，不要手动填写任何授权码。";
+        }
+
+        stateStatus.textContent = hasState
+          ? "安全校验参数已随回调到达，但不会在页面中显示或保存。"
+          : "当前回调未包含安全校验参数；本页不会据此宣称授权已经完成。";
+      })();
+    </script>
+  </body>
+</html>
